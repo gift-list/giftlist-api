@@ -1,3 +1,6 @@
 from django.test import TestCase
 
-# Create your tests here.
+class ListTests(TestCase):
+
+    def test_dummy(self):
+        assert True == True
