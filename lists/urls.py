@@ -6,7 +6,7 @@ from rest_framework.authtoken import views
 
 urlpatterns = [
     url(r'^event-lists/(?P<pk>\d+)/', DetailUpdateEventList.as_view()),
-    url(r'^event-lists/', ListCreateEventList.as_view()),
+    url(r'^event-lists/', ListCreateEventList.as_view(), name='eventlist-listcreate'),
     url(r'^items/(?P<pk>\d+)/', DetailUpdateDestroyItem.as_view()),
     url(r'^items/', ListCreateItem.as_view()),
     url(r'^pledge/(?P<pk>\d+)/', DetailUpdateDestroyPledge.as_view()),
