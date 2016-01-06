@@ -21,3 +21,8 @@ script:
 - coverage run --source='.' manage.py test lists api
 after_success:
 - coveralls
+deploy:
+  provider: heroku
+  api-key:
+    - secure: "KCGgbikqgW2jfsIInaCn6HPgebn25isU/KuTHP7CH1n9YEjaT2/wF0UT2T63+fKy2xGljq9evFyYhEK4tSJS/JlCvmwWr87dJQP9UyZkWOzEfVjyzcak4rXmpL8BuDTOtP0ixcDZQyw29snoXS8stdQwnmWAz5JoS5BOC9mIbxS53yTfbC2uikFobfssu2m4P90gsDzTi7bOMkej8j5CquR2fl7MpgBgsB3qZ+CGuRgB25tuX5pVVzSaiQxHANgI8NpdDPnwTtagg7bNTt1y8nRqS8hfrLZ+YQCI7E67aba5BtGVApIeBzEJGofE13oGvu89lkT4aL4HoFVPZS9hAyRVzrOWpCP5VJfeu1wIdV2IBcE21r+Iv8SZFgtlOoXyVykn6hnJ8dkBXLA1/hTruCCzH6JpgvvR2h9MQ3zl9BYB9b9dsc7KYzp+r567MnXEdG1VxUXu2KPCS4i6ivI4O0LrI+oILD7wdUJHFg7eAWS9n0ohLKdTw2U5EpIWiGTvQtftLsYAfxsJiqN+dX253fLnp693tuQLVCyBxQV+6z73leGwlDD8uBDj03k/Ytx5VWkIykOagN6UpjtDivd2g+wbSwr+8IuY654z18QAg5/85TtA5p2dckB3O8Gjk86nX5vIpjxX2PD32kCSlyig6OZrTLY7/U830CKjn9Y7wOc="
+  app: fierce-stream-5433
