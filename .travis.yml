@@ -3,7 +3,6 @@ python:
 - 3.5.0
 services:
 - postgresql
-- memcached
 env:
 - DJANGO=1.9.1
 before_install:
