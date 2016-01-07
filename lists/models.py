@@ -1,13 +1,14 @@
 import locale
 from django.contrib.auth.models import User
 from django.db import models
+from users.models import Address
 
 locale.setlocale( locale.LC_MONETARY, 'en_US.UTF-8' )
-
 
 class EventList(models.Model):
     name = models.CharField(max_length=200)
     owner = models.ForeignKey(User)
+    shipping_address = models.ForeignKey(Address, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField()
 

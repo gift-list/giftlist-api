@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from users.models import Address
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,4 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
                                         )
 
         return user
+
+class AddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = ('id', 'street', 'street2', 'city', 'state', 'zip')
 

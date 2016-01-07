@@ -17,7 +17,7 @@ before_script:
 - psql -c "CREATE DATABASE giftlist;" -U postgres
 - python manage.py migrate
 script:
-- coverage run --source='.' manage.py test lists api
+- coverage run --source='.' manage.py test lists api users
 after_success:
 - coveralls
 deploy:

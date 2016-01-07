@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'localflavor',
     'debug_toolbar',
     'lists',
     'api',
