@@ -36,7 +36,9 @@ class DetailUpdateDestroyItem(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         instance.deleted = True
         instance.save()
-
+        for pledge in instance.pledges.all():
+            pledge.status = Pledge.REFUNDED
+            pledge.save()
 
 
 class ListCreatePledge(generics.ListCreateAPIView):

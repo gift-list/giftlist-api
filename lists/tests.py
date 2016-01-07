@@ -112,8 +112,11 @@ class DetailUpdateDestroyItemTest(ListTestBase):
         pledge_id = self.pledge.id
         response = self.client.delete(reverse('dud-item', [item_id]))
 
-        self.assertEqual(0, Item.objects.filter(pk=item_id).count())
-        self.assertEqual(0, Pledge.objects.filter(pk=pledge_id).count())
+        item = Item.objects.get(pk=item_id)
+        pledge = Pledge.objects.get(pk=pledge_id)
+
+        self.assertTrue(item.deleted)
+        self.assertEqual(Pledge.REFUNDED, pledge.status)
 
 
 

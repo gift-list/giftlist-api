@@ -39,16 +39,19 @@ class Pledge(models.Model):
     CAPTURED = 'Captured'
     REFUNDED = 'Refunded'
     DISPUTED = 'Disputed'
+    INITIAL = 'Intial'
     STATUS_CHOICE = (
         (CAPTURED, 'captured'),
         (REFUNDED, 'refunded'),
-        (DISPUTED, 'disputed')
+        (DISPUTED, 'disputed'),
+        (INITIAL, 'initial')
     )
 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     item = models.ForeignKey(Item, related_name='pledges')
     owner = models.ForeignKey(User, related_name='pledges')
-    status = models.CharField(max_length=15, choices=STATUS_CHOICE)
+    status = models.CharField(max_length=15, choices=STATUS_CHOICE,
+                              default=INITIAL)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
