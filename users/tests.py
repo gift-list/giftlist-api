@@ -3,7 +3,7 @@ from rest_framework.test import APITestCase, APIRequestFactory
 from users.permissions import StaffExceptCreate
 
 
-class TestUserPermissions(APITestCase):
+class UserPermissionsTests(APITestCase):
 
     def setUp(self):
 
