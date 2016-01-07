@@ -22,7 +22,7 @@ class DetailUpdateEventList(generics.RetrieveUpdateAPIView):
 
 
 class ListCreateItem(generics.ListCreateAPIView):
-    queryset = Item.objects.all()
+    queryset = Item.objects.filter(deleted=False)
     serializer_class = ItemSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
@@ -30,7 +30,6 @@ class ListCreateItem(generics.ListCreateAPIView):
 class DetailUpdateDestroyItem(generics.RetrieveUpdateDestroyAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    # TODO this is bad we need to figure out what happens when item is destoyed
     permission_classes = (IsAuthenticated,)
 
     def perform_destroy(self, instance):
