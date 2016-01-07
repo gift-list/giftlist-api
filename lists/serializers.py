@@ -1,13 +1,7 @@
 from django.contrib.auth.models import User
 from lists.models import EventList, Item, Pledge
 from rest_framework import serializers
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email')
+from users.serializers import UserSerializer
 
 
 class EventListSerializer(serializers.ModelSerializer):

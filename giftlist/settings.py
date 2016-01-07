@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'lists',
     'api',
+    'users',
 ]
 
 MIDDLEWARE_CLASSES = [
