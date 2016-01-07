@@ -10,6 +10,6 @@ urlpatterns = [
     url(r'^items/(?P<pk>\d+)/', DetailUpdateDestroyItem.as_view()),
     url(r'^items/', ListCreateItem.as_view()),
     url(r'^pledge/(?P<pk>\d+)/', DetailUpdateDestroyPledge.as_view()),
-    url(r'^pledge/', ListCreatePledge.as_view()),
+    url(r'^pledge/', ListCreatePledge.as_view(),name='lc-pledge'),
     url(r'^api-token-auth/', views.obtain_auth_token),
 ]

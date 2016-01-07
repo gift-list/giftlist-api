@@ -5,6 +5,7 @@ from users.models import Address
 
 locale.setlocale( locale.LC_MONETARY, 'en_US.UTF-8' )
 
+
 class EventList(models.Model):
     name = models.CharField(max_length=200)
     owner = models.ForeignKey(User)

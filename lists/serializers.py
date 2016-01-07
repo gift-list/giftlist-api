@@ -5,11 +5,11 @@ from users.serializers import UserSerializer
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = EventList
-        fields = ('name', 'owner', 'created_at')
+        fields = ('name', 'owner', 'active', 'shipping_address', 'created_at')
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -22,9 +22,9 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class PledgeSerializer(serializers.ModelSerializer):
-    pledger = UserSerializer()
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = Pledge
-        fields = ('amount', 'item', 'pledger', 'created_at', 'modified_at')
+        fields = ('amount', 'item', 'owner', 'created_at', 'modified_at')
 
