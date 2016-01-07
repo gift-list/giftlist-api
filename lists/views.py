@@ -3,6 +3,7 @@ from lists.models import EventList, Item, Pledge
 from lists.serializers import EventListSerializer, ItemSerializer, \
     PledgeSerializer
 from rest_framework import generics, permissions
+from rest_framework.permissions import IsAuthenticated
 
 
 class ListCreateEventList(generics.ListCreateAPIView):
@@ -29,10 +30,10 @@ class ListCreateItem(generics.ListCreateAPIView):
 class DetailUpdateDestroyItem(generics.RetrieveUpdateDestroyAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_destroy(self, instance):
-        instance.pledges.delete()
+        instance.pledges.all().delete()
         instance.delete()
 
 

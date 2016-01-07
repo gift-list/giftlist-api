@@ -101,14 +101,19 @@ class ListCreatePledge(ListTestBase):
         self.assertContains(response, self.user.username, status_code=201)
 
 
-class DetailUpdateDestroyPledgeTest(ListTestBase):
+class DetailUpdateDestroyItemTest(ListTestBase):
 
     def setUp(self):
-        self.setup_item()
+        self.setup_pledge()
 
-    def test_perform_create(self):
+    def test_perform_destroy(self):
         self.client.force_login(self.user)
-        response = self.client.post(reverse('lc-pledge'),
-                                    data={"amount": 10.00,
-                                          "item": self.item.id})
-        self.assertContains(response, self.user.username, status_code=201)
+        item_id = self.item.id
+        pledge_id = self.pledge.id
+        response = self.client.delete(reverse('dud-item', [item_id]))
+
+        self.assertEqual(0, Item.objects.filter(pk=item_id).count())
+        self.assertEqual(0, Pledge.objects.filter(pk=pledge_id).count())
+
+
+
