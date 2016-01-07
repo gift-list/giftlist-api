@@ -1,45 +1,66 @@
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase, APIRequestFactory
-from users.permissions import StaffExceptCreate
+from django.test import TestCase
+from lists.models import EventList, Item, Pledge
 
 
-class TestUserPermissions(APITestCase):
+class EventListTests(TestCase):
 
     def setUp(self):
+        self.user = User.objects.create_user(username='test',
+                                             email='test@test.com',
+                                             password='password_password')
 
-        # Set up the users
-        self.staff = User.objects.create_user(username="staff",
-                                              email="staff@test.com",
-                                              password="jiofjsoafodjas123")
-        self.staff.is_staff = True
+    def test_eventlist_string(self):
+        event_list = EventList.objects.create(name='Birthday',
+                                              owner=self.user,
+                                              active=True)
 
-        self.user = User.objects.create_user(username="user",
-                                             email="user@test.com",
-                                             password="jiofjsoafodjas123")
 
-    def test_StaffExceptCreate_post(self):
-        permission = StaffExceptCreate()
+        self.assertTrue(self.user.username in str(event_list),
+                        msg="Missing username")
+        self.assertTrue('Birthday' in str(event_list), msg="Missing name")
 
-        factory = APIRequestFactory()
-        request = factory.post('/test/', data={})
-        request.user = self.user
 
-        self.assertTrue(permission.has_permission(request, None))
+class ItemTests(TestCase):
 
-        # Now run with staff member to get the same result
-        request.user = self.staff
-        self.assertTrue(permission.has_permission(request, None))
+    def setUp(self):
+        self.user = User.objects.create_user(username='test',
+                                             email='test@test.com',
+                                             password='password_password')
+        self.event_list = EventList.objects.create(name='Birthday',
+                                              owner=self.user,
+                                              active=True)
 
-    def test_StaffExceptCreate_get(self):
-        permission = StaffExceptCreate()
+    def test_item_string(self):
+        item = Item.objects.create(name="Motorcycle",
+                                   link="http://harleydavidson.com",
+                                   image_link="http://flickr.com",
+                                   price=1000.00,
+                                   event_list = self.event_list)
 
-        factory = APIRequestFactory()
-        request = factory.get('/test/')
+        self.assertTrue("Motorcycle" in str(item))
+        self.assertTrue(str(item.price) in str(item))
 
-        # First make sure staff can access
-        request.user = self.staff
-        self.assertTrue(permission.has_permission(request, None))
 
-        # Make sure the user cannot get into the system
-        request.user = self.user
-        self.assertFalse(permission.has_permission(request, None))
+class PledgeTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test',
+                                             email='test@test.com',
+                                             password='password_password')
+        self.event_list = EventList.objects.create(name='Birthday',
+                                              owner=self.user,
+                                              active=True)
+        self.item = Item.objects.create(name="Motorcycle",
+                                   link="http://harleydavidson.com",
+                                   image_link="http://flickr.com",
+                                   price=1000.00,
+                                   event_list = self.event_list)
+
+    def test_pledge_string(self):
+        pledge = Pledge.objects.create(amount=10.00,
+                                       item=self.item,
+                                       owner=self.user)
+
+        self.assertTrue("Motorcycle" in str(pledge))
+        self.assertTrue("$10.00" in str(pledge))
+        self.assertTrue(self.user.username in str(pledge))

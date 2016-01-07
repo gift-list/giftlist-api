@@ -1,8 +1,8 @@
-from django.conf import settings
+import locale
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
+locale.setlocale( locale.LC_MONETARY, 'en_US.UTF-8' )
 
 
 class EventList(models.Model):
@@ -40,5 +40,7 @@ class Pledge(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '{} gave {} for {}'.format(self.pledger, self.amount, self.item)
+        return '{} gave {} for {}'.format(self.owner,
+                                          locale.currency(self.amount),
+                                          self.item.name)
 
