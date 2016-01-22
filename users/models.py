@@ -5,10 +5,10 @@ from localflavor.us.models import USStateField, USZipCodeField
 
 class UserProfile(models.Model):
 
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     avatar = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_created=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "User: {} profile".format(self.user.username)

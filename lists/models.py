@@ -30,6 +30,11 @@ class Item(models.Model):
 
     @property
     def reserved(self) -> bool:
+        """
+        An item is considered reserved if the total pledges are the same
+        as the price of the object.
+        :return:
+        """
         total = self.pledges.aggregate(total=Sum('amount'))['total']
         return total >= self.price
 

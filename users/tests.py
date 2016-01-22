@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
+from django.test import TestCase
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase, APIRequestFactory
-from users.models import Address
+from users.models import Address, UserProfile
 from users.permissions import StaffExceptCreate
 
 
@@ -45,6 +46,41 @@ class UserPermissionsTests(APITestCase):
         # Make sure the user cannot get into the system
         request.user = self.user
         self.assertFalse(permission.has_permission(request, None))
+
+
+class UserProfileTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='test',
+                                             email='test@test.com',
+                                             password='password_password')
+
+    def test_user_profile_string(self):
+        profile = UserProfile.objects.create(user=self.user)
+
+        self.assertTrue("test" in str(profile))
+
+
+class AddressTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='test',
+                                             email='test@test.com',
+                                             password='password_password')
+
+    def test_address_string(self):
+        street="1112 Casino Center"
+        city="Las Vegas"
+        state="NV"
+        zip="89104"
+
+        address = Address.objects.create(street=street, city=city, state=state,
+                                         zip=zip, owner=self.user)
+
+        self.assertTrue(street in str(address))
+        self.assertTrue(city in str(address))
+        self.assertTrue(state in str(address))
+        self.assertTrue(zip in str(address))
 
 
 class ListCreateAddressView(APITestCase):

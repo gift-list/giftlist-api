@@ -78,11 +78,11 @@ class ItemTests(ListTestBase):
         self.assertTrue("Motorcycle" in str(item))
         self.assertTrue(str(item.price) in str(item))
 
-    def test_item_reserved_false(self):
+    def test_item_reserved(self):
         item = Item.objects.create(name="Motorcycle",
                            link="http://harleydavidson.com",
                            image_link="http://flickr.com",
-                           price=1000.00,
+                           price=100.00,
                            event_list = self.event_list)
 
         pledge = item.pledges.create(amount=10.00,
@@ -90,6 +90,12 @@ class ItemTests(ListTestBase):
                                      owner=self.user)
 
         self.assertFalse(item.reserved)
+
+        big_pledge = item.pledges.create(amount=90.00,
+                                         item=item,
+                                         owner=self.user)
+
+        self.assertTrue(item.reserved)
 
 
 
