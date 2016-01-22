@@ -127,8 +127,8 @@ class PledgeSerializerTests(ListTestBase):
         mock_charge.create.return_value = FakeCharge("fake_id")
 
         # Data to create serializer
-        data = {'amount': 10.00, 'item': 1, 'owner': 1, 'status': 'initial',
-                'token': "abcd"}
+        data = {'amount': 10.00, 'item': self.item.id, 'owner': self.user.id,
+                'status': 'initial', 'token': "abcd"}
 
         # Data should easily pass so lets check
         serializer = PledgeSerializer(data=data)
