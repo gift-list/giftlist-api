@@ -93,7 +93,7 @@ class UserSerializerTests(APITestCase):
                 "last_name": "testington"}
 
         serializer = UserSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.is_valid(), msg=serializer.errors)
 
         user = serializer.create(serializer.validated_data)
 
