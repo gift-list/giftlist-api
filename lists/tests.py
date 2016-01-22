@@ -132,7 +132,7 @@ class PledgeSerializerTests(ListTestBase):
 
         # Data should easily pass so lets check
         serializer = PledgeSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.is_valid(), msg=serializer.errors)
 
         # Add a user.  Step is usually done in save of view
         serializer.validated_data['owner'] = self.user
