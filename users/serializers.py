@@ -4,10 +4,12 @@ from users.models import Address
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=128, write_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = ('id', 'username', 'email', 'password', 'first_name',
+                  'last_name')
 
     def create(self, validated_data):
         user = User.objects.create_user(username=validated_data['username'],

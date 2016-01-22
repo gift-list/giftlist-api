@@ -1,9 +1,12 @@
+from collections import namedtuple
 from django.contrib.auth.models import User
 from django.test import TestCase
 from lists.models import EventList, Item, Pledge
+from lists.serializers import PledgeSerializer
+from mock import patch
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-
+import stripe
 
 class ListTestBase(APITestCase):
 
@@ -98,7 +101,6 @@ class ItemTests(ListTestBase):
         self.assertTrue(item.reserved)
 
 
-
 class PledgeTests(ListTestBase):
     def setUp(self):
         self.setup_item()
@@ -113,7 +115,32 @@ class PledgeTests(ListTestBase):
         self.assertTrue(self.user.username in str(pledge))
 
 
-class ListCreateEventList(ListTestBase):
+class PledgeSerializerTests(ListTestBase):
+    def setUp(self):
+        self.setup_item()
+
+    @patch('stripe.Charge')
+    def test_create(self, mock_charge):
+
+        # We need to mock stripe in the creation
+        FakeCharge = namedtuple('FakeCharge', ['stripe_id'])
+        mock_charge.create.return_value = FakeCharge("fake_id")
+
+        # Data to create serializer
+        data = {'amount': 10.00, 'item': 1, 'owner': 1, 'status': 'initial',
+                'token': "abcd"}
+
+        # Data should easily pass so lets check
+        serializer = PledgeSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+        # Add a user.  Step is usually done in save of view
+        serializer.validated_data['owner'] = self.user
+        pledge = serializer.create(serializer.validated_data)
+        self.assertEqual(pledge.charge_id, "fake_id")
+
+
+class ListCreateEventListTests(ListTestBase):
     def setUp(self):
         self.setup_item()
 
@@ -124,15 +151,21 @@ class ListCreateEventList(ListTestBase):
         self.assertContains(response, self.user.username, status_code=201)
 
 
-class ListCreatePledge(ListTestBase):
+class ListCreatePledgeTests(ListTestBase):
     def setUp(self):
         self.setup_item()
 
-    def test_perform_create(self):
+    @patch('stripe.Charge')
+    def test_perform_create(self, mock_charge):
+        FakeCharge = namedtuple('FakeCharge', ['stripe_id'])
+        mock_charge.create.return_value = FakeCharge("fake_id")
+
         self.client.force_login(self.user)
         response = self.client.post(reverse('lc-pledge'),
                                     data={"amount": 10.00,
-                                          "item": self.item.id})
+                                          "item": self.item.id,
+                                          "token": "tok_7lgoDooBPIvvmb"})
+
         self.assertContains(response, self.user.username, status_code=201)
 
 

@@ -63,6 +63,7 @@ class Pledge(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     charge_id = models.CharField(max_length=30)
 
+
     def __str__(self):
         return '{} gave {} for {}'.format(self.owner,
                                           locale.currency(self.amount),

@@ -4,6 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase, APIRequestFactory
 from users.models import Address, UserProfile
 from users.permissions import StaffExceptCreate
+from users.serializers import UserSerializer
 
 
 class UserPermissionsTests(APITestCase):
@@ -83,7 +84,26 @@ class AddressTests(TestCase):
         self.assertTrue(zip in str(address))
 
 
-class ListCreateAddressView(APITestCase):
+class UserSerializerTests(APITestCase):
+
+    def test_user_creation(self):
+
+        data = {"username": "test", "email": "test@test.com",
+                "password": "password_password", "first_name": "tester",
+                "last_name": "testington"}
+
+        serializer = UserSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+        user = serializer.create(serializer.validated_data)
+
+        self.assertEqual(data['username'], user.username)
+        self.assertEqual(data['email'], user.email)
+        self.assertEqual(data['first_name'], user.first_name)
+        self.assertEqual(data['last_name'], user.last_name)
+
+
+class ListCreateAddressViewTests(APITestCase):
 
     def setUp(self):
         # Set up the users
