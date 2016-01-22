@@ -1,6 +1,7 @@
 import locale
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
 from users.models import Address
 
 locale.setlocale( locale.LC_MONETARY, 'en_US.UTF-8' )
@@ -27,9 +28,10 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    # @property
-    # def reserved(self):
-    #     return self.pledges.aggregate()
+    @property
+    def reserved(self) -> bool:
+        total = self.pledges.aggregate(total=Sum('amount'))['total']
+        return total >= self.price
 
     def __str__(self):
         return 'Name: {} Price: {}'.format(self.name, self.price)
@@ -54,6 +56,7 @@ class Pledge(models.Model):
                               default=INITIAL)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+    charge_id = models.CharField(max_length=30)
 
     def __str__(self):
         return '{} gave {} for {}'.format(self.owner,

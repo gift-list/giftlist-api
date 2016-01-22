@@ -11,26 +11,41 @@ class ListTestBase(APITestCase):
         self.user = User.objects.create_user(username='test',
                                              email='test@test.com',
                                              password='password_password')
+        return self.user
 
-    def setup_event_list(self):
-        self.setup_user()
+    def setup_event_list(self, user=None):
+        if not user:
+            self.setup_user()
+            user = self.user
+
         self.event_list = EventList.objects.create(name='Birthday',
-                                                   owner=self.user,
+                                                   owner=user,
                                                    active=True)
+        return self.event_list
 
-    def setup_item(self):
-        self.setup_event_list()
+    def setup_item(self, event_list=None):
+        if not event_list:
+            self.setup_event_list()
+            event_list = self.event_list
+
         self.item = Item.objects.create(name="Motorcycle",
                                         link="http://harleydavidson.com",
                                         image_link="http://flickr.com",
                                         price=1000.00,
-                                        event_list = self.event_list)
+                                        event_list = event_list)
 
-    def setup_pledge(self):
-        self.setup_item()
-        self.pledge = Pledge.objects.create(amount=10.00,
-                                            item=self.item,
+        return self.item
+
+    def setup_pledge(self, item=None):
+        if not item:
+            self.setup_item()
+            item = self.item
+
+        self.pledge = item.pledges.create(amount=10.00,
+                                            item=item,
                                             owner=self.user)
+
+        return self.pledge
 
 
 class EventListTests(ListTestBase):
@@ -62,6 +77,20 @@ class ItemTests(ListTestBase):
 
         self.assertTrue("Motorcycle" in str(item))
         self.assertTrue(str(item.price) in str(item))
+
+    def test_item_reserved_false(self):
+        item = Item.objects.create(name="Motorcycle",
+                           link="http://harleydavidson.com",
+                           image_link="http://flickr.com",
+                           price=1000.00,
+                           event_list = self.event_list)
+
+        pledge = item.pledges.create(amount=10.00,
+                                     item=item,
+                                     owner=self.user)
+
+        self.assertFalse(item.reserved)
+
 
 
 class PledgeTests(ListTestBase):
