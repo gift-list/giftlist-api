@@ -1,6 +1,6 @@
 # giftlist-api
 
-[![Build Status](https://travis-ci.org/gift-list/giftlist-api.svg?branch=master)](https://travis-ci.org/gift-list/giftlist-api)  [![Coverage Status](https://coveralls.io/repos/gift-list/giftlist-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/gift-list/giftlist-api?branch=master)
+[![Build Status](https://travis-ci.org/gift-list/giftlist-api.svg?branch=master)](https://travis-ci.org/gift-list/giftlist-api) [![Coverage Status](https://coveralls.io/repos/github/gift-list/giftlist-api/badge.svg?branch=master)](https://coveralls.io/github/gift-list/giftlist-api?branch=master) 
 
 Backend api for Gift List creation.
 
