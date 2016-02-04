@@ -21,9 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+
 class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
         fields = ('id', 'street', 'street2', 'city', 'state', 'zip')
-

@@ -42,6 +42,7 @@ class PledgeSerializer(serializers.ModelSerializer):
                                       .format(validated_data['item'].id))
 
         return Pledge.objects.create(charge_id=charge.stripe_id,
+                                     status=Pledge.CAPTURED,
                                      **validated_data)
 
     class Meta:

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 from users.models import Address
+import stripe
 
 locale.setlocale( locale.LC_MONETARY, 'en_US.UTF-8' )
 
@@ -13,6 +14,15 @@ class EventList(models.Model):
     shipping_address = models.ForeignKey(Address, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField()
+
+    def deactivate(self):
+        """
+        Deactivates the list by deactivating all items
+        :return:
+        """
+
+        for item in self.item_set.all():
+            item.deactivate()
 
     def __str__(self):
         return "{} by {}".format(self.name, self.owner)
@@ -28,6 +38,16 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    def deactivate(self):
+        """
+        Loops through all pledges and requests cleanup if the item isn't already
+        reserved
+        :return:
+        """
+        if not self.reserved:
+            for pledge in self.pledges.filter(status=Pledge.CAPTURED):
+                pledge.clear()
+
     @property
     def reserved(self) -> bool:
         """
@@ -35,7 +55,8 @@ class Item(models.Model):
         as the price of the object.
         :return:
         """
-        total = self.pledges.aggregate(total=Sum('amount'))['total']
+        total = self.pledges.filter(status=Pledge.CAPTURED).aggregate(
+                total=Sum('amount'))['total']
         return total >= self.price
 
     def __str__(self):
@@ -63,6 +84,17 @@ class Pledge(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     charge_id = models.CharField(max_length=30)
 
+    def clear(self):
+        """
+        Refund amount and change the status of the pledge only if the pledge is
+        in a CAPTURED status
+        :return:
+        """
+        if self.status == self.CAPTURED:
+            refund = stripe.Refund.create()
+
+            self.status = self.REFUNDED
+            self.save()
 
     def __str__(self):
         return '{} gave {} for {}'.format(self.owner,
