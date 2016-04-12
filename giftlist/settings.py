@@ -137,3 +137,11 @@ STATIC_URL = '/static/'
 
 # Stripe setup
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
