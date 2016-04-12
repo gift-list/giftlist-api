@@ -128,6 +128,7 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_PREFLIGHT_MAX_AGE = 864000
 
 
 # Static files (CSS, JavaScript, Images)
@@ -141,7 +142,6 @@ stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     )
 }

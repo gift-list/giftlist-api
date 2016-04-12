@@ -10,9 +10,10 @@ from rest_framework.test import APITestCase
 class ListTestBase(APITestCase):
 
     def setup_user(self):
+        self.password = 'password_password'
         self.user = User.objects.create_user(username='test',
                                              email='test@test.com',
-                                             password='password_password')
+                                             password=self.password)
         return self.user
 
     def setup_event_list(self, user=None):
@@ -252,7 +253,7 @@ class DetailUpdateDestroyItemTest(ListTestBase):
         self.setup_pledge()
 
     def test_perform_destroy(self):
-        self.client.force_login(self.user)
+        self.client.login(username=self.user, password=self.password)
         item_id = self.item.id
         pledge_id = self.pledge.id
         self.client.delete(reverse('dud-item', [item_id]))
